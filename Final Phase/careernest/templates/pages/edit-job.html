@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Job - CareerNest</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/jobs.css' %}" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">CareerNest</div>
+        <ul class="nav-links">
+          <li><a href="{% url 'company-dashboard' %}">Dashboard</a></li>
+          <li><a href="{% url 'company-jobs' %}">My Jobs</a></li>
+          <li><a href="{% url 'add-job' %}">Post Job</a></li>
+          <li><a href="{% url 'index' %}" class="btn-secondary">Logout</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="form-container wide">
+        <h2>Edit Job Opportunity</h2>
+        <form id="edit-job-form" class="job-form" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="job-title">Job Title</label>
+            <input
+              type="text"
+              id="job-title"
+              name="job-title"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="salary">Salary</label>
+              <input
+                type="text"
+                id="salary"
+                name="salary"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="experience">Years of Experience</label>
+              <input
+                type="number"
+                id="experience"
+                name="experience"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="job-status">Job Status</label>
+            <select id="job-status" name="job-status" required>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="job-description">Job Description</label>
+            <textarea
+              id="job-description"
+              name="job-description"
+              rows="10"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <a href="{% url 'company-jobs' %}" class="btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+    <div id="toast" class="toast"></div>
+    <footer>
+      <p>&copy; 2025 CareerNest. All rights reserved.</p>
+    </footer>
+    <script src="{% static 'javascript/edit-job.js' %}"></script>
+  </body>
+</html>

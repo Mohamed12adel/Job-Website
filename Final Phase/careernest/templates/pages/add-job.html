@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Job - CareerNest</title>
+    <link rel="stylesheet" href="{% static 'css/master.css' %}" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">CareerNest</div>
+      <ul class="nav-links">
+        <li class="btn-primary">
+          <a href="{% url 'company-dashboard' %}">Dashboard</a>
+        </li>
+        <li class="btn-primary"><a href="{% url 'company-jobs' %}">My Jobs</a></li>
+        <li class="btn-primary"><a href="{% url 'add-job' %}">Post Job</a></li>
+        <li class="logout">
+          <a href="{% url 'index' %}" class="btn-secondary">Logout</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="container">
+      <header>Add New Job</header>
+      <form action="{% url 'create-job' %}" method="POST">
+        {% csrf_token %}
+        <div class="form first">
+          <div class="job">
+            <div class="fields">
+              <div class="input-field">
+                <label>Job title</label>
+                <input
+                  type="text"
+                  class="input-title"
+                  placeholder="Enter title"
+                  required
+                  name="title"
+                />
+              </div>
+              <div class="input-field">
+                <label>Salary</label>
+                <input
+                  type="number"
+                  class="input-salary"
+                  placeholder="Enter your Salary"
+                  required
+                  name="Salary"
+                />
+              </div>
+              <div class="input-field">
+                <label>Company name</label>
+                <input
+                  type="text"
+                  class="input-company-name"
+                  placeholder="Enter your company name"
+                  required
+                  name="company name"
+                />
+              </div>
+              <div class="input-field">
+                <label>Year of Experience</label>
+                <input
+                  type="number"
+                  class="input-experience"
+                  placeholder="Enter your Experience"
+                  required
+                  name="Experience"
+                />
+              </div>
+              <div class="input-field">
+                <label>Description</label>
+                <input
+                  type="text"
+                  class="input-description"
+                  required
+                  name="description"
+                />
+              </div>
+              <div class="in-open">
+                <p>Job status</p>
+                <div>
+                  <input id="win" type="radio" name="status" value="open" checked />
+                  <label for="win">Open</label>
+                </div>
+                <div>
+                  <input id="lose" type="radio" name="status" value="closed" />
+                  <label for="lose">Closed</label>
+                </div>
+              </div>
+              <div class="sub">
+                <input class="submit_input" type="submit" value="Submit" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div id="toast" class="toast"></div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const form = document.querySelector("form");
+      
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch('/api/create-job/', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': csrfToken
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showToast("Job added successfully!");
+            setTimeout(() => {
+              window.location.href = "{% url 'company-dashboard' %}";
+            }, 1500);
+          } else {
+            showToast("Error: " + (data.error || "Failed to add job"), "error");
+          }
+        })
+        .catch(error => {
+          showToast("An error occurred: " + error.message, "error");
+        });
+      });
+      
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.style.backgroundColor = type === "error" ? "var(--danger-color)" : "var(--success-color)";
+        toast.style.display = "block";
+        
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 3000);
+      }
+    });
+  </script>
+</html>
